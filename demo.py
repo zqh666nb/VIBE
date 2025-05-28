@@ -298,9 +298,9 @@ def main(args):
                 side_img = np.zeros_like(img)
 
             for person_id, person_data in frame_results[frame_idx].items():
-                frame_verts = person_data['verts']
+                #frame_verts = person_data['verts']
                 frame_cam = person_data['cam']
-
+                frame_joints3d = person_data['joints3d']
                 mc = mesh_color[person_id]
 
                 mesh_filename = None
@@ -310,14 +310,21 @@ def main(args):
                     os.makedirs(mesh_folder, exist_ok=True)
                     mesh_filename = os.path.join(mesh_folder, f'{frame_idx:06d}.obj')
 
-                img = renderer.render(
-                    img,
-                    frame_verts,
-                    cam=frame_cam,
-                    color=mc,
-                    mesh_filename=mesh_filename,
-                )
-
+                #img = renderer.render(
+                #    img,
+                #    frame_verts,
+                #    cam=frame_cam,
+                #    color=mc,
+                # mesh_filename=mesh_filename,
+                #)
+                img = renderer.render_s(
+                                img,
+                                #frame_verts,
+                                frame_joints3d,
+                                cam=frame_cam,
+                                mesh_filename=mesh_filename,
+                                
+                                )
                 if args.sideview:
                     side_img = renderer.render(
                         side_img,
@@ -361,7 +368,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--output_folder', type=str,
                         help='output folder to write results')
-
+    
     parser.add_argument('--tracking_method', type=str, default='bbox', choices=['bbox', 'pose'],
                         help='tracking method to calculate the tracklet of a subject from the input video')
 

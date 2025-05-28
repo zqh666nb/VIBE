@@ -21,8 +21,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from lib.core.config import VIBE_DATA_DIR
+from lib.models.spin import hmr
+#from lib.models.smplx_regressor import SMPLXRegressor
 from lib.models.spin import Regressor, hmr
-
 
 class TemporalEncoder(nn.Module):
     def __init__(
@@ -89,7 +90,10 @@ class VIBE(nn.Module):
             use_residual=use_residual,
         )
 
-        # regressor can predict cam, pose and shape params in an iterative way
+        
+        #smplx_model_dir=osp.join(VIBE_DATA_DIR, 'smplx'),
+        #smplx_mean_params=osp.join(VIBE_DATA_DIR, 'smplx_mean_params.npz')
+        #)
         self.regressor = Regressor()
 
         if pretrained and os.path.isfile(pretrained):
@@ -147,7 +151,11 @@ class VIBE_Demo(nn.Module):
         checkpoint = torch.load(pretrained)
         self.hmr.load_state_dict(checkpoint['model'], strict=False)
 
-        # regressor can predict cam, pose and shape params in an iterative way
+        #regressor can predict cam, pose and shape params in an iterative way
+        #self.regressor = SMPLXRegressor(
+        #smplx_model_dir=osp.join(VIBE_DATA_DIR, 'smplx'),
+    #smplx_mean_params=osp.join(VIBE_DATA_DIR, 'smplx_mean_params.npz')
+#)
         self.regressor = Regressor()
 
         if pretrained and os.path.isfile(pretrained):
